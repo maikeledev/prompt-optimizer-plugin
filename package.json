@@ -1,9 +1,10 @@
 {
   "name": "prompt-optimizer",
-  "displayName": "MEV Prompt Optimizer",
+  "displayName": "Maikelev Prompt Optimizer",
   "description": "Optimiza automáticamente tus prompts para obtener mejores resultados de IA",
   "version": "1.0.0",
-  "publisher": "mev",
+  "publisher": "maikelev",
+  "web": "https://maikelev.com",
   "repository": {
     "type": "git",
     "url": "https://github.com/maikeledev/prompt-optimizer-plugin"
