@@ -1,0 +1,1 @@
+crea un script que se conecte alguna api publica de tiempo en costa rica

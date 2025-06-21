@@ -1,0 +1,96 @@
+{
+  "name": "prompt-optimizer",
+  "displayName": "MEV Prompt Optimizer",
+  "description": "Optimiza automáticamente tus prompts para obtener mejores resultados de IA",
+  "version": "1.0.0",
+  "publisher": "mev",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/maikeledev/prompt-optimizer-plugin"
+  },
+  "engines": {
+    "vscode": "^1.96.2"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "promptOptimizer.optimize",
+        "title": "Optimize Prompt",
+        "category": "Prompt Optimizer"
+      },
+      {
+        "command": "promptOptimizer.configure",
+        "title": "Configure API Key",
+        "category": "Prompt Optimizer"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "promptOptimizer.optimize",
+        "key": "ctrl+shift+o",
+        "mac": "cmd+shift+o"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "promptOptimizer.optimize",
+          "when": "editorHasSelection",
+          "group": "1_modification"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Prompt Optimizer",
+      "properties": {
+        "promptOptimizer.openaiApiKey": {
+          "type": "string",
+          "default": "",
+          "description": "Tu API Key de OpenAI para optimizar prompts"
+        },
+        "promptOptimizer.anthropicApiKey": {
+          "type": "string",
+          "default": "",
+          "description": "Tu API Key de Anthropic para los modelos Claude"
+        },
+        "promptOptimizer.autoOptimize": {
+          "type": "boolean",
+          "default": false,
+          "description": "Optimizar automáticamente prompts mientras escribes"
+        },
+        "promptOptimizer.model": {
+          "type": "string",
+          "default": "gpt-4",
+          "enum": [
+            "gpt-4",
+            "gpt-3.5-turbo",
+            "claude-3-opus-20240229",
+            "claude-3-sonnet-20240229",
+            "claude-3-haiku-20240307"
+          ],
+          "description": "Modelo de IA para optimización (los modelos 'claude' usan la API Key de Anthropic)"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "pretest": "npm run lint",
+    "package": "vsce package"
+  },
+  "dependencies": {
+    "axios": "^1.10.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.3",
+    "@types/vscode": "^1.96.2",
+    "eslint": "^9.29.0"
+  }
+}
