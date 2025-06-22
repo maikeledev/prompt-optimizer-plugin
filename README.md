@@ -2,6 +2,10 @@
 
 Un optimizador de prompts para VS Code que mejora tus instrucciones para obtener mejores respuestas de la IA. Es compatible con los modelos de OpenAI (GPT-4, GPT-3.5) y Anthropic (Claude 3).
 
+<img src="https://raw.githubusercontent.com/maikeledev/IA-translation/refs/heads/main/extension-name.png" width="100%" alt="maikelev prompt optimizer">
+
+<img src="https://raw.githubusercontent.com/maikeledev/prompt-optimizer-plugin/refs/heads/main/demo-optimizer.gif" alt="maikelev optimizer demo">
+
 ## Características
 
 -   **Optimización con un Clic**: Mejora tus prompts al instante con `Cmd + Shift + O`.
@@ -35,7 +39,7 @@ Antes de usar la extensión, debes configurar tus claves de API.
 2.  Busca `Prompt Optimizer`.
 3.  Verás campos para `Openai Api Key` y `Anthropic Api Key`. Añade las claves de los servicios que quieras usar.
 4.  En la opción `Model`, selecciona el modelo de IA que prefieras de la lista desplegable.
-5.  Para activar la **auto-optimización**, marca la casilla `Auto Optimize`. Cuando termines una línea con `.` o `?`, la extensión la mejorará automáticamente tras una breve pausa.
+5.  Para activar la **auto-optimización**, marca la casilla `Auto Optimize`. `?UPE`, la extensión la mejorará automáticamente tras una breve pausa.
 
 ## Uso
 

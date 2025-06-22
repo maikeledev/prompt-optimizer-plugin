@@ -102,36 +102,6 @@ Please provide only the optimized prompt without explanations or surrounding tex
   }
 }
 
-function isPromptLike(text) {
-  const promptIndicators = [
-    "please",
-    "can you",
-    "help me",
-    "explain",
-    "create",
-    "generate",
-    "write",
-    "make",
-    "build",
-    "design",
-    "analyze",
-    "summarize",
-    "translate",
-    "convert",
-    "optimize",
-    "improve",
-    "fix",
-    "debug",
-  ]
-
-  const lowerText = text.toLowerCase()
-  return (
-    promptIndicators.some((indicator) => lowerText.includes(indicator)) &&
-    text.length > 20 &&
-    text.length < 2000
-  )
-}
-
 function activate(context) {
   console.log("Prompt Optimizer extension is now active!")
 
@@ -193,10 +163,7 @@ function activate(context) {
       const line = editor.document.lineAt(change.range.start.line)
       const lineText = line.text
 
-      if (
-        (isPromptLike(lineText) && lineText.endsWith(".UPE")) ||
-        lineText.endsWith("?UPE")
-      ) {
+      if (lineText.endsWith("?UPE")) {
         setTimeout(async () => {
           const currentLine = editor.document.lineAt(change.range.start.line)
           if (currentLine.text === lineText) {
