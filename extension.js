@@ -1,5 +1,5 @@
-const vscode = require("vscode")
-const axios = require("axios")
+const vscode = require("vscode");
+const axios = require("axios");
 
 const apiProviders = {
   openai: {
@@ -47,25 +47,24 @@ const apiProviders = {
     }),
     extractContent: (response) => response.data.content[0].text.trim(),
   },
-}
+};
 
-// Función para optimizar el prompt
 async function optimizePrompt(originalPrompt) {
-  const config = vscode.workspace.getConfiguration("promptOptimizer")
-  const model = config.get("model")
+  const config = vscode.workspace.getConfiguration("promptOptimizer");
+  const model = config.get("model");
 
-  const providerName = model.includes("claude") ? "anthropic" : "openai"
-  const provider = apiProviders[providerName]
+  const providerName = model.includes("claude") ? "anthropic" : "openai";
+  const provider = apiProviders[providerName];
 
-  const apiKey = provider.getApiKey(config)
+  const apiKey = provider.getApiKey(config);
 
   if (!apiKey) {
     vscode.window.showErrorMessage(
       `Por favor configura tu API key de ${
         providerName.charAt(0).toUpperCase() + providerName.slice(1)
       } en las configuraciones`
-    )
-    return originalPrompt
+    );
+    return originalPrompt;
   }
 
   const optimizationPrompt = `You are an expert prompt engineer. Your task is to optimize the following prompt to make it more effective, clear, and likely to produce better AI responses. Guidelines for optimization:
@@ -79,50 +78,50 @@ async function optimizePrompt(originalPrompt) {
 
 Original prompt: "${originalPrompt}"
 
-Please provide only the optimized prompt without explanations or surrounding text.`
+Please provide only the optimized prompt without explanations or surrounding text.`;
 
   try {
     const { url, options, data } = provider.buildRequest(
       apiKey,
       model,
       optimizationPrompt
-    )
-    const response = await axios.post(url, data, options)
-    return provider.extractContent(response)
+    );
+    const response = await axios.post(url, data, options);
+    return provider.extractContent(response);
   } catch (error) {
-    console.error(`Full error from ${providerName}:`, error.response?.data)
-    let detailedMessage = error.message
+    console.error(`Full error from ${providerName}:`, error.response?.data);
+    let detailedMessage = error.message;
     if (error.response?.data?.error?.message) {
-      detailedMessage = `Error de ${providerName}: ${error.response.data.error.message}`
+      detailedMessage = `Error de ${providerName}: ${error.response.data.error.message}`;
     }
     vscode.window.showErrorMessage(
       "Error al optimizar el prompt: " + detailedMessage
-    )
-    return originalPrompt
+    );
+    return originalPrompt;
   }
 }
 
 function activate(context) {
-  console.log("Prompt Optimizer extension is now active!")
+  console.log("Prompt Optimizer extension is now active!");
 
   let optimizeCommand = vscode.commands.registerCommand(
     "promptOptimizer.optimize",
     async () => {
-      const editor = vscode.window.activeTextEditor
+      const editor = vscode.window.activeTextEditor;
 
       if (!editor) {
-        vscode.window.showErrorMessage("No hay editor activo")
-        return
+        vscode.window.showErrorMessage("No hay editor activo");
+        return;
       }
 
-      const selection = editor.selection
-      const selectedText = editor.document.getText(selection)
+      const selection = editor.selection;
+      const selectedText = editor.document.getText(selection);
 
       if (!selectedText) {
         vscode.window.showErrorMessage(
           "Por favor selecciona el texto del prompt"
-        )
-        return
+        );
+        return;
       }
 
       vscode.window.withProgress(
@@ -132,54 +131,54 @@ function activate(context) {
           cancellable: false,
         },
         async () => {
-          const optimizedPrompt = await optimizePrompt(selectedText)
+          const optimizedPrompt = await optimizePrompt(selectedText);
 
           await editor.edit((editBuilder) => {
-            editBuilder.replace(selection, optimizedPrompt)
-          })
+            editBuilder.replace(selection, optimizedPrompt);
+          });
 
           vscode.window.showInformationMessage(
             "Prompt optimizado exitosamente!"
-          )
+          );
         }
-      )
+      );
     }
-  )
+  );
 
   let autoOptimizeDisposable = vscode.workspace.onDidChangeTextDocument(
     async (event) => {
-      const config = vscode.workspace.getConfiguration("promptOptimizer")
-      const autoOptimize = config.get("autoOptimize", false)
+      const config = vscode.workspace.getConfiguration("promptOptimizer");
+      const autoOptimize = config.get("autoOptimize", false);
 
-      if (!autoOptimize) return
+      if (!autoOptimize) return;
 
-      const editor = vscode.window.activeTextEditor
-      if (!editor || event.document !== editor.document) return
+      const editor = vscode.window.activeTextEditor;
+      if (!editor || event.document !== editor.document) return;
 
-      const changes = event.contentChanges
-      if (changes.length === 0) return
+      const changes = event.contentChanges;
+      if (changes.length === 0) return;
 
-      const change = changes[0]
-      const line = editor.document.lineAt(change.range.start.line)
-      const lineText = line.text
+      const change = changes[0];
+      const line = editor.document.lineAt(change.range.start.line);
+      const lineText = line.text;
 
       if (lineText.endsWith("?UPE")) {
         setTimeout(async () => {
-          const currentLine = editor.document.lineAt(change.range.start.line)
+          const currentLine = editor.document.lineAt(change.range.start.line);
           if (currentLine.text === lineText) {
-            const optimized = await optimizePrompt(lineText)
+            const optimized = await optimizePrompt(lineText);
             if (optimized !== lineText) {
-              const lineRange = currentLine.range
+              const lineRange = currentLine.range;
               await editor.edit((editBuilder) => {
-                editBuilder.replace(lineRange, optimized)
-              })
-              vscode.window.showInformationMessage("Prompt auto-optimizado")
+                editBuilder.replace(lineRange, optimized);
+              });
+              vscode.window.showInformationMessage("Prompt auto-optimizado");
             }
           }
-        }, 2000)
+        }, 2000);
       }
     }
-  )
+  );
 
   let configCommand = vscode.commands.registerCommand(
     "promptOptimizer.configure",
@@ -189,52 +188,52 @@ function activate(context) {
           label: `${provider.displayName} API Key`,
           providerKey: key,
         })
-      )
+      );
 
       const choice = await vscode.window.showQuickPick(providerChoices, {
         placeHolder: "¿Qué API Key quieres configurar?",
-      })
+      });
 
-      if (!choice) return
+      if (!choice) return;
 
-      const providerKey = choice.providerKey
-      const selectedProvider = apiProviders[providerKey]
+      const providerKey = choice.providerKey;
+      const selectedProvider = apiProviders[providerKey];
 
       const apiKey = await vscode.window.showInputBox({
         prompt: `Ingresa tu API Key de ${selectedProvider.displayName}`,
         password: true,
         placeHolder: selectedProvider.placeholder,
-      })
+      });
 
       if (apiKey) {
-        const config = vscode.workspace.getConfiguration("promptOptimizer")
+        const config = vscode.workspace.getConfiguration("promptOptimizer");
         await config.update(
           selectedProvider.configKeyName,
           apiKey,
           vscode.ConfigurationTarget.Global
-        )
+        );
         vscode.window.showInformationMessage(
           `API Key de ${selectedProvider.displayName} configurada correctamente!`
-        )
+        );
       }
     }
-  )
+  );
 
   let statusBarItem = vscode.window.createStatusBarItem(
     vscode.StatusBarAlignment.Right,
     100
-  )
-  statusBarItem.text = "$(wand) Optimize Prompt"
-  statusBarItem.command = "promptOptimizer.optimize"
-  statusBarItem.tooltip = "Optimizar prompt seleccionado"
-  statusBarItem.show()
+  );
+  statusBarItem.text = "$(wand) Optimize Prompt";
+  statusBarItem.command = "promptOptimizer.optimize";
+  statusBarItem.tooltip = "Optimizar prompt seleccionado";
+  statusBarItem.show();
 
   context.subscriptions.push(
     optimizeCommand,
     autoOptimizeDisposable,
     configCommand,
     statusBarItem
-  )
+  );
 }
 
 function deactivate() {}
@@ -242,4 +241,4 @@ function deactivate() {}
 module.exports = {
   activate,
   deactivate,
-}
+};

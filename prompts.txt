@@ -1,9 +1,0 @@
-Analyze the contents of the "extension.js" file in the current working directory and provide a detailed report that includes the following:
-
-1. A high-level overview of the file's purpose and functionality.
-2. An analysis of the key modules, functions, and data structures used within the file.
-3. Recommendations for improving the code's readability, maintainability, and performance, if applicable.
-4. Suggestions for potential refactoring or optimization opportunities.
-5. Any potential issues, bugs, or security vulnerabilities that should be addressed.
-
-The report should be structured in a clear and concise manner, with appropriate section headings and subheadings. Please provide the output in a plain text format.
